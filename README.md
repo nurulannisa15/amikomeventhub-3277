@@ -60,4 +60,12 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 **Nama : Nurul Annisa** <br>
 **NIM : 24.12.3277** <br>
-**Link: https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/** 
+**Link: https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/** <br>
+<br>
+**Link Dashboard    : https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/admin/dashboard** <br>
+**Link Events       : https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/admin/events** <br>
+**Link Transaksi    : https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/admin/transactions** <br>
+<br>
+**Link Welcome      : https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/** <br>
+**Link Event-Detail : https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/event-detail** <br>
+**Link Checkout     : https://amikomeventhub-3277-master-kwmqq4.free.laravel.cloud/checkout**
