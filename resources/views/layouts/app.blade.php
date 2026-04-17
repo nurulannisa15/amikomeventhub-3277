@@ -42,7 +42,8 @@
                 class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Daftar</button>
         </div> -->
     </nav>
-@yield('content')
+
+    @yield('content')
 
     <!-- Footer -->
     <footer class="bg-indigo-900 text-indigo-100 py-20 px-6 mt-20">
@@ -61,7 +62,7 @@
                 <h4 class="text-white font-bold mb-6">Navigasi</h4>
                 <ul class="space-y-4">
                     <li><a href="/" class="hover:text-white transition">Home</a></li>
-                    <li><a href="#" class="hover:text-white transition">Semua Event</a></li>
+                    <li><a href="" class="hover:text-white transition">Semua Event</a></li>
                     <li><a href="#" class="hover:text-white transition">Cara Bayar</a></li>
                 </ul>
             </div>
