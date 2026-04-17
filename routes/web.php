@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return view('home');
+    return view('welcome');
 });
 
 Route::get('/tentang', function(){
@@ -25,4 +25,33 @@ Route::get('/katalog', function () {
 
 Route::get('/bantuan', function () {
     return view('bantuan');
+});
+
+//route tugas 2
+Route::get('/,', function () {
+    return view('welcome');
+});
+
+Route::get('/event-detail', function () {
+    return view('event-detail');
+});
+
+Route::get('/checkout', function () {
+    return view('checkout');
+});
+
+Route::get('/ticket', function () {
+    return view('ticket');
+});
+
+Route::get('/admin/dashboard', function () {
+    return view('admin.dashboard');
+});
+
+Route::get('/admin/events', function () {
+    return view('admin.events');
+});
+
+Route::get('/admin/transactions', function () {
+    return view('admin.transactions');
 });
