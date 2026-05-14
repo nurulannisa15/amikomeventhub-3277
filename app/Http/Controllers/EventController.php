@@ -8,7 +8,6 @@ class EventController extends Controller
 {
     public function show()
     {
-        // Nanti: $event = Event::findOrFail($id);
         return view('event-detail');
     }
 
@@ -19,6 +18,7 @@ class EventController extends Controller
 
     public function ticket()
     {
+        // Nanti bisa ambil data transaksi dari session/database
         return view('ticket');
     }
 }

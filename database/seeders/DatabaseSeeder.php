@@ -35,46 +35,48 @@ class DatabaseSeeder extends Seeder
             'slug' => 'workshop',
         ]);
 
-        // 3. Buat Data Event (Minimal 6 event sesuai tugas)
+        // 3. Buat Data Event (Minimal 6 event dengan tanggal MASA DEPAN)
+        // ✅ Tanggal disesuaikan agar > now() (Mei 2026)
+        
         Event::create([
             'category_id' => $category2->id,
-            'title' => 'Jazz Night 2025',
+            'title' => 'Jazz Night 2026',
             'description' => 'Nikmati malam yang indah dengan alunan musik jazz yang merdu.',
-            'date' => '2025-05-10 19:00:00',
+            'date' => '2026-11-10 19:00:00',  // ← Diupdate: November 2026
             'location' => 'Amikom Baru',
             'price' => 50000,
             'stock' => 100,
-            'poster_path' => 'posters/event-1.png',
+            'poster_path' => 'assets/concert.png',
         ]);
 
         Event::create([
             'category_id' => $category1->id,
             'title' => 'Hackathon - Unleash Your Inner Developer',
             'description' => 'Ayo asah skill coding kamu dan ciptakan solusi inovatif!',
-            'date' => '2025-05-05 10:00:00',
+            'date' => '2026-10-05 10:00:00',  // ← Diupdate: Oktober 2026
             'location' => 'Inkubator Amikom',
             'price' => 50000,
             'stock' => 100,
-            'poster_path' => 'posters/event-2.png',
+            'poster_path' => 'assets/hackathon.png',
         ]);
 
         Event::create([
             'category_id' => $category1->id,
-            'title' => 'AI & FUTURE TECH SUMMIT 2025',
+            'title' => 'AI & FUTURE TECH SUMMIT 2026',
             'description' => 'Jelajahi tren terkini dalam kecerdasan buatan.',
-            'date' => '2025-05-01 13:00:00',
+            'date' => '2026-09-01 13:00:00',  // ← Diupdate: September 2026
             'location' => 'Cinema Unit 6',
             'price' => 50000,
             'stock' => 100,
-            'poster_path' => 'posters/event-3.png',
+            'poster_path' => 'assets/workshop.png',
         ]);
 
-        // TAMBAHKAN 3 EVENT LAGI (sesuai tugas minimal 6 event)
+        // TAMBAHKAN 3 EVENT LAGI (dengan tanggal masa depan)
         Event::create([
             'category_id' => $category3->id,
             'title' => 'UI/UX Masterclass',
             'description' => 'Pelajari dasar-dasar desain UI/UX dari praktisi profesional.',
-            'date' => '2025-06-15 09:00:00',
+            'date' => '2026-12-15 09:00:00',  // ← Diupdate: Desember 2026
             'location' => 'Lab Komputer Amikom',
             'price' => 75000,
             'stock' => 50,
@@ -83,9 +85,9 @@ class DatabaseSeeder extends Seeder
 
         Event::create([
             'category_id' => $category2->id,
-            'title' => 'E-Sport Championship',
+            'title' => 'E-Sport Championship 2027',
             'description' => 'Turnamen gaming terbesar se-Universitas AMIKOM.',
-            'date' => '2025-07-20 14:00:00',
+            'date' => '2027-01-20 14:00:00',  // ← Diupdate: Januari 2027
             'location' => 'Gedung Olahraga Amikom',
             'price' => 0,
             'stock' => 200,
@@ -94,9 +96,9 @@ class DatabaseSeeder extends Seeder
 
         Event::create([
             'category_id' => $category1->id,
-            'title' => 'Digital Marketing Workshop',
+            'title' => 'Digital Marketing Workshop 2027',
             'description' => 'Strategi pemasaran digital untuk pemula.',
-            'date' => '2025-08-10 10:00:00',
+            'date' => '2027-02-10 10:00:00',  // ← Diupdate: Februari 2027
             'location' => 'Ruang Seminar 1',
             'price' => 100000,
             'stock' => 75,
