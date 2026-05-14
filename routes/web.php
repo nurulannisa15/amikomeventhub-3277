@@ -25,9 +25,10 @@ Route::get('/tentang', fn() => view('tentang'))->name('tentang');
 Route::get('/contact', fn() => view('contact'))->name('contact');
 
 // Alur pemesanan event
-Route::get('/event-detail', [EventController::class, 'show'])->name('events.show');
-Route::get('/checkout', [EventController::class, 'checkout'])->name('checkout');
-Route::get('/ticket', [EventController::class, 'ticket'])->name('ticket');
+Route::get('/event-detail/{id}', [EventController::class, 'show'])->name('events.show');
+Route::get('/checkout/{event}', [EventController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/{event}/process', [EventController::class, 'process'])->name('checkout.process');
+Route::get('/ticket/{id?}', [EventController::class, 'ticket'])->name('ticket');
 
 /*
 |--------------------------------------------------------------------------
@@ -51,3 +52,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('categories', CategoryController::class);
 
 });
+
+// Logout route
+Route::post('/logout', function () {
+    return redirect('/')->with('success', 'Anda telah logout');
+})->name('logout');
