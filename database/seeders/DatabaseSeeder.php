@@ -34,9 +34,6 @@ class DatabaseSeeder extends Seeder
             'name' => 'Workshop',
             'slug' => 'workshop',
         ]);
-
-        // 3. Buat Data Event (Minimal 6 event dengan tanggal MASA DEPAN)
-        // ✅ Tanggal disesuaikan agar > now() (Mei 2026)
         
         Event::create([
             'category_id' => $category2->id,

@@ -9,80 +9,75 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
-    /**
-     * Tampilkan Daftar Kategori & Fitur Filter
-     */
+    // READ: Tampilkan daftar kategori
     public function index(Request $request)
     {
-        // Mengganti ->get() menjadi ->query() karena ini biasanya dari URL parameter
-        $search = $request->query('search');
-
-        $categories = Category::when($search, function ($query) use ($search) {
-            return $query->where('name', 'LIKE', "%{$search}%");
-        })
-            ->withCount('events')
-            ->latest()
-            ->get();
-
+        $query = Category::query();
+        
+        // Search filter
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'LIKE', '%' . $request->search . '%');
+        }
+        
+        $categories = $query->latest()->paginate(10);
+        
         return view('admin.categories.index', compact('categories'));
     }
 
-    /**
-     * Form Tambah Kategori
-     */
+    // CREATE: Tampilkan form tambah kategori
     public function create()
     {
         return view('admin.categories.create');
     }
 
-    /**
-     * Simpan Kategori Baru
-     */
+    // STORE: Simpan kategori baru
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories'
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
         ]);
 
-        Category::create([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-        ]);
+        $validated['slug'] = Str::slug($validated['name']);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambah.');
+        Category::create($validated);
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Kategori berhasil ditambahkan!');
     }
 
-    /**
-     * Form Edit Kategori
-     */
+    // EDIT: Tampilkan form edit kategori
     public function edit(Category $category)
     {
         return view('admin.categories.edit', compact('category'));
     }
 
-    /**
-     * Update Kategori
-     */
+    // UPDATE: Perbarui kategori
     public function update(Request $request, Category $category)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:categories,name,' . $category->id
+        $validated = $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
         ]);
 
-        $category->update([
-            'name' => $request->name,
-            'slug' => Str::slug($request->name),
-        ]);
+        $validated['slug'] = Str::slug($validated['name']);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diperbarui.');
+        $category->update($validated);
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Kategori berhasil diperbarui!');
     }
 
-    /**
-     * Hapus Kategori
-     */
+    // DELETE: Hapus kategori
     public function destroy(Category $category)
     {
+        // Cek apakah kategori masih punya event
+        if ($category->events()->count() > 0) {
+            return redirect()->route('admin.categories.index')
+                ->with('error', 'Kategori tidak dapat dihapus karena masih memiliki ' . $category->events()->count() . ' event.');
+        }
+
         $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus.');
+
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Kategori berhasil dihapus!');
     }
 }

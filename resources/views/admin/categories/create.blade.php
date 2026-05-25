@@ -1,17 +1,39 @@
-@extends('layouts.admin', ['title' => 'Tambah Kategori'])
+@extends('layouts.admin')
+
+@section('title', 'Tambah Kategori - Admin')
+@section('page_title', 'Tambah Kategori Baru')
+@section('page_subtitle', 'Masukkan nama kategori untuk event Anda.')
+
 @section('content')
-<h1 class="text-3xl font-black mb-10">Tambah Kategori</h1>
-<div class="bg-white p-10 rounded-[2.5rem] border shadow-sm max-w-2xl">
-    <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-6">
-        @csrf
-        <div>
-            <label class="block font-bold mb-2">Nama Kategori</label>
-            <input type="text" name="name" class="w-full px-5 py-3 rounded-xl border outline-none focus:ring-2 focus:ring-indigo-500" required>
-        </div>
-        <div class="flex gap-4">
-            <button type="submit" class="px-8 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg">Simpan</button>
-            <a href="{{ route('admin.categories.index') }}" class="px-8 py-3 text-slate-400 font-bold">Batal</a>
-        </div>
-    </form>
+<!-- Full Width Container -->
+<div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+    <div class="p-8 max-w-3xl mx-auto">
+        <form action="{{ route('admin.categories.store') }}" method="POST" class="space-y-6">
+            @csrf
+
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Nama Kategori</label>
+                <input type="text" name="name" value="{{ old('name') }}"
+                    placeholder="Contoh: Seminar IT, Konser Musik, Workshop"
+                    class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
+                    required>
+                @error('name')
+                <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
+                @enderror
+                <p class="text-xs text-slate-400 mt-2">Slug akan dibuat otomatis dari nama kategori.</p>
+            </div>
+
+            <div class="pt-6 flex justify-end gap-4 border-t border-slate-100">
+                <a href="{{ route('admin.categories.index') }}"
+                    class="px-6 py-3 text-slate-500 font-bold hover:text-slate-800 transition">
+                    Batal
+                </a>
+                <button type="submit"
+                    class="px-8 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">
+                    Simpan Kategori
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 @endsection

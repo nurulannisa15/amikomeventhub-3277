@@ -8,69 +8,72 @@ use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    // Method show untuk event detail
     public function show($id)
     {
         $event = Event::with('category')->findOrFail($id);
         return view('event-detail', compact('event'));
     }
 
-    // Method checkout
     public function checkout($id)
     {
         $event = Event::findOrFail($id);
         return view('checkout', compact('event'));
     }
 
-    // ✅ Method process untuk menangani submit form checkout
-    public function process(Request $request, $event)
+    public function process(Request $request, $id)
     {
-        // Validasi input
+        $event = Event::findOrFail($id);
+
         $validated = $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email',
-            'customer_phone' => 'required|string',
+            'customer_email' => 'required|email|max:255',
+            'customer_phone' => 'required|string|max:20',
         ]);
 
-        // Ambil data event
-        $eventModel = Event::findOrFail($event);
-
-        // Generate order_id unik
-        $orderId = 'TRX-' . strtoupper(\Str::random(8));
-
-        // Simpan ke tabel transactions
         $transaction = Transaction::create([
-            'event_id' => $eventModel->id,
-            'order_id' => $orderId,
-            'customer_name' => $request->customer_name,
-            'customer_email' => $request->customer_email,
-            'customer_phone' => $request->customer_phone,
-            'total_price' => $request->total_price ?? ($eventModel->price + 5000),
-            'status' => 'Success', // Simulasi langsung sukses
+            'event_id' => $event->id,
+            'order_id' => 'TRX-' . date('YmdHis') . '-' . strtoupper(substr(uniqid(), -4)),
+            'customer_name' => $validated['customer_name'],
+            'customer_email' => $validated['customer_email'],
+            'customer_phone' => $validated['customer_phone'],
+            'total_price' => $event->price + 5000,
+            'status' => 'Success',
+            'snap_token' => null,
         ]);
 
-        // Redirect ke halaman ticket dengan order_id
-        return redirect()->route('ticket', ['id' => $orderId])
-            ->with('success', 'Pembayaran berhasil!');
+        // ✅ FIX: Kirim ID sebagai fallback + session
+        return redirect()->route('ticket', ['id' => $transaction->id])
+            ->with('transaction', $transaction);
     }
 
-    // ✅ Method ticket yang DINAMIS
-    public function ticket($id = null)
+    public function ticket($id = null)  // ✅ FIX: Terima parameter opsional
     {
-        // Jika ada parameter id (order_id), ambil data transaksi
+        $transaction = null;
+
+        // 1. Coba dari database dulu
         if ($id) {
-            $transaction = Transaction::with('event')->where('order_id', $id)->firstOrFail();
-            return view('ticket', compact('transaction'));
+            $transaction = Transaction::with('event')->find($id);
         }
 
-        // Jika tidak ada parameter, ambil transaksi terakhir dari session
-        // (untuk testing/manual access)
-        $transaction = Transaction::with('event')->latest()->first();
-        
+        // 2. Fallback ke session
         if (!$transaction) {
-            return redirect()->route('home')->with('error', 'Tidak ada transaksi ditemukan.');
+            $transaction = session('transaction');
+            if ($transaction && is_object($transaction)) {
+                $transaction->load('event');
+            }
         }
 
-        return view('ticket', compact('transaction'));
+        if (!$transaction) {
+            return redirect('/')->with('error', 'Data transaksi tidak ditemukan');
+        }
+
+        $qrData = [
+            'order_id' => $transaction->order_id,
+            'event' => $transaction->event->title ?? 'Event',
+            'customer' => $transaction->customer_name,
+            'date' => $transaction->event->date ?? now(),
+        ];
+
+        return view('ticket', compact('transaction', 'qrData'));
     }
 }
