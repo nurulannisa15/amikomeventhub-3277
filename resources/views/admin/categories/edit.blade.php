@@ -1,33 +1,36 @@
-@extends('layouts.admin', ['title' => 'Edit Kategori'])
+@extends('layouts.admin')
+
+@section('title', 'Edit Kategori - Admin')
+@section('page_title', 'Edit Kategori')
+@section('page_subtitle', 'Ubah nama kategori.')
 
 @section('content')
-<header class="mb-10">
-    <h1 class="text-3xl font-black text-slate-800">Edit Kategori</h1>
-    <p class="text-slate-500 font-medium">Ubah nama kategori <span class="text-indigo-600">"{{ $category->name }}"</span></p>
-</header>
-
-<div class="bg-white rounded-[2.5rem] border border-slate-100 p-10 shadow-sm max-w-2xl">
+<div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm max-w-2xl">
     <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" class="space-y-6">
         @csrf
-        @method('PUT') <div>
-            <label class="block text-sm font-bold text-slate-700 mb-2">Nama Kategori</label>
-            <input type="text" 
-                   name="name" 
-                   value="{{ old('name', $category->name) }}" 
-                   class="w-full px-5 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition" 
-                   required>
+        @method('PUT')
+
+        <div>
+            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Nama Kategori</label>
+            <input type="text" name="name" value="{{ old('name', $category->name) }}"
+                placeholder="Contoh: Seminar IT, Konser Musik, Workshop"
+                class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
+                required>
             @error('name')
-                <p class="text-rose-500 text-xs mt-2 font-medium">{{ $message }}</p>
+            <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
             @enderror
+            <p class="text-xs text-slate-400 mt-2">Slug saat ini: <span class="font-mono">{{ $category->slug }}</span></p>
         </div>
 
-        <div class="flex items-center gap-4 mt-8 pt-6 border-t border-slate-50">
-            <button type="submit" class="px-10 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg hover:bg-indigo-700 transform active:scale-95 transition">
-                Simpan Perubahan
-            </button>
-            <a href="{{ route('admin.categories.index') }}" class="px-6 py-3 font-bold text-slate-400 hover:text-slate-600 transition">
+        <div class="pt-4 flex justify-end gap-4 border-t border-slate-100">
+            <a href="{{ route('admin.categories.index') }}"
+                class="px-6 py-4 text-slate-500 font-bold hover:text-slate-800 transition">
                 Batal
             </a>
+            <button type="submit"
+                class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">
+                Simpan Perubahan
+            </button>
         </div>
     </form>
 </div>

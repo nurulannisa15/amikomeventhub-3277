@@ -6,118 +6,106 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
-    /**
-     * Tampilkan Daftar Event
-     */
+    // READ: Tampilkan daftar event dengan pagination
     public function index()
     {
-        $events = Event::with('category')->latest()->paginate(10);
+        $events = Event::with('category')
+            ->latest()
+            ->paginate(10);
+
         return view('admin.events.index', compact('events'));
     }
 
-    /**
-     * Form Tambah Event
-     */
+    // CREATE: Tampilkan form tambah event
     public function create()
     {
         $categories = Category::all();
         return view('admin.events.create', compact('categories'));
     }
 
-    /**
-     * Simpan Event Baru
-     */
+    // STORE: Simpan event baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'price' => 'required|numeric',
-            'stock' => 'required|integer',
-            'location' => 'required',
-            'poster' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'date' => 'required'
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+            'location' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:1',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
         ]);
 
-        // Upload Poster
-        $posterPath = $request->file('poster')->store('posters', 'public');
+        // Handle upload poster
+        if ($request->hasFile('poster')) {
+            $path = $request->file('poster')->store('posters', 'public');
+            $validated['poster_path'] = $path;
+        }
 
-        // Simpan ke Database (Tanpa Slug)
-        Event::create([
-            'title' => $request->title,
-            'category_id' => $request->category_id,
-            'description' => $request->description,
-            'price' => $request->price,
-            'stock' => $request->stock,
-            'location' => $request->location,
-            'date' => $request->date,
-            'poster_path' => $posterPath,
-        ]);
+        Event::create($validated);
 
-        return redirect()->route('admin.events.index')->with('success', 'Event berhasil disimpan!');
+        return redirect()->route('admin.events.index')->with('success', 'Event berhasil ditambahkan!');
     }
 
-    /**
-     * Form Edit Event
-     */
+
+    // SHOW: Tampilkan detail event (opsional untuk admin)
+    public function show(Event $event)
+    {
+        return view('admin.events.show', compact('event'));
+    }
+
+    // EDIT: Tampilkan form edit event
     public function edit(Event $event)
     {
         $categories = Category::all();
         return view('admin.events.edit', compact('event', 'categories'));
     }
 
-    /**
-     * Update Event
-     */
+    // UPDATE: Perbarui data event
     public function update(Request $request, Event $event)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'description' => 'required|string',
+            'description' => 'nullable|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:1',
-            'poster' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'poster' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $data = $request->only([
-            'title',
-            'category_id',
-            'description',
-            'date',
-            'location',
-            'price',
-            'stock'
-        ]);
-
+        // Jika ada file baru diupload
         if ($request->hasFile('poster')) {
-            if ($event->poster_path) {
+            // 1. Hapus poster lama dari storage (jika ada)
+            if ($event->poster_path && Storage::disk('public')->exists($event->poster_path)) {
                 Storage::disk('public')->delete($event->poster_path);
             }
-            $data['poster_path'] = $request->file('poster')->store('posters', 'public');
-        }
 
-        $event->update($data);
+            // 2. Upload poster baru
+            $path = $request->file('poster')->store('posters', 'public');
+            $validated['poster_path'] = $path;
+        }
+        // Jika tidak upload file baru, poster lama tetap dipakai (tidak masuk $validated)
+
+        $event->update($validated);
+
         return redirect()->route('admin.events.index')->with('success', 'Event berhasil diperbarui!');
     }
 
-    /**
-     * Hapus Event
-     */
+    // DELETE: Hapus event
     public function destroy(Event $event)
     {
-        // Hapus file gambar dari storage
-        if ($event->poster_path) {
-            Storage::disk('public')->delete($event->poster_path);
-        }
-
         $event->delete();
-        return redirect()->route('admin.events.index')->with('success', 'Event dihapus!');
+
+        return redirect()
+            ->route('admin.events.index')
+            ->with('success', 'Event berhasil dihapus!');
     }
 }
