@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('partners', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('logo_url')->nullable();
+            $table->string('logo')->nullable(); // ← Pakai 'logo', bukan 'logo_url'
             $table->timestamps();
         });
     }
