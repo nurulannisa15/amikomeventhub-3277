@@ -10,4 +10,4 @@ class Partner extends Model
         'name',
         'logo',
     ];
-}
+} 
