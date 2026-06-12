@@ -22,6 +22,7 @@ class LoginController extends Controller
             'password' => 'required|min:6',
         ]);
 
+        
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 

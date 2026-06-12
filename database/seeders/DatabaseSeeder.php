@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        
         // 2. Buat Kategori Event
         $category1 = Category::create([
             'name' => 'Seminar IT',
