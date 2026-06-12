@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\TransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\PartnerController;
 
+
 /*
 |--------------------------------------------------------------------------
 | AUTHENTICATION ROUTES (PUBLIC - Untuk Admin Login)
@@ -25,12 +26,12 @@ Route::get('/admin/login', [LoginController::class, 'showLoginForm'])->name('adm
 Route::post('/admin/login', [LoginController::class, 'login']);
 Route::post('/admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
+
 /*
 |--------------------------------------------------------------------------
 | USER AREA - Public Pages
 |--------------------------------------------------------------------------
 */
-
 
 // Halaman utama (pakai Controller)
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -46,10 +47,8 @@ Route::get('/contact', fn() => view('contact'))->name('contact');
 // Detail event: butuh {id}
 Route::get('/event-detail/{id}', [EventController::class, 'show'])->name('events.show');
 
-// ✅ Checkout: BUTUH {id}
+// ✅ USER AREA - Checkout Routes
 Route::get('/checkout/{id}', [EventController::class, 'checkout'])->name('checkout');
-
-// Tambahkan di bawah route checkout
 Route::post('/checkout/{id}/process', [EventController::class, 'process'])->name('checkout.process');
 
 // Ticket: tidak butuh ID (menampilkan hasil pembayaran)
