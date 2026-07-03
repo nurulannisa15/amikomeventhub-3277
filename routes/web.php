@@ -17,7 +17,7 @@ use App\Http\Controllers\Admin\PartnerController;
 |--------------------------------------------------------------------------
 */
 // ✅ Tambahkan route 'login' yang redirect ke admin login
-Route::get('/login', function() {
+Route::get('/login', function () {
     return redirect()->route('admin.login');
 })->name('login');
 
@@ -81,8 +81,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
 
     // Partner Routes
     Route::resource('partners', \App\Http\Controllers\Admin\PartnerController::class);
-
 });
+
+Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);
 
 // Logout route (standalone - untuk user biasa jika ada)
 Route::post('/logout', function () {
